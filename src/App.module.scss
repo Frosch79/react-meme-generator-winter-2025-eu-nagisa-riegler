@@ -1,0 +1,28 @@
+.app {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 15vh;
+}
+
+.textBox {
+  align-items: center;
+  padding-left: 5%;
+  padding-right: 2%;
+  color: grey;
+}
+label {
+  padding-right: 2%;
+}
+
+button {
+  color: black;
+  padding: 5px;
+  border-radius: 30%;
+  border: 2px;
+  background-color: rgb(167, 165, 165);
+}
+
+.download {
+  padding-left: 0;
+}
