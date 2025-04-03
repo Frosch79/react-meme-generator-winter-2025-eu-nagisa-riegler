@@ -15,53 +15,6 @@ export default function App() {
 
   const apiUrl = 'https://api.memegen.link/templates/';
 
-  /* set image url */
-  const changeRegex = {
-    _: ' ',
-    __: '_',
-    '--': '-',
-    '~n': '\n',
-    '~q': '?',
-    '~a': '&',
-    '~p': '%',
-    '~h': '#',
-    '~s': '/',
-    '~b': '\\',
-    '~l': '<',
-    '~g': '>',
-    "''": '"',
-  };
-  const regexTest = (word) => {
-    let makeWord = '';
-    const testWord = word.split('');
-
-    if (testWord.length > 0) {
-      for (let i = 0; i < testWord.length; i++) {
-        const search = Object.keys(changeRegex).find(
-          (key) => changeRegex[key] === testWord[i],
-        );
-        if (typeof search !== 'undefined') {
-          makeWord += search;
-        } else {
-          makeWord += word[i];
-        }
-      }
-    } else {
-      makeWord = '_';
-    }
-
-    return makeWord;
-  };
-  const createImage = (obj) => {
-    if (typeof testObj === 'object') {
-      const { id, firstText, secondText } = obj;
-      const first = regexTest(firstText);
-      const second = regexTest(secondText);
-
-      return `https://api.memegen.link/images/${id}/${first}/${second}.jpg`;
-    }
-  };
-
   useEffect(() => {
     /* set template data */
     async function memeTemplate() {
@@ -69,21 +22,25 @@ export default function App() {
         .then((response) => response.json())
         .then((toObjectSep) => toObjectSep.map((meme) => meme))
         .then((setMeme) => setMemes(setMeme));
+
       return data;
       /*    setMemes(data); */
     }
     memeTemplate().catch((error) => console.log(error));
-    setImage(`https://api.memegen.link/images/aag/_/aliens.jpg`);
 
     setAddData({
       addTemplate: 'Ancient Aliens Guy',
-      addTopText: topText,
-      addBottomText: bottomText,
     });
   }, []);
 
   useEffect(() => {
+    /* set image */
+    fetch(image).catch((error) => console.log(error));
+  }, [image]);
+
+  useEffect(() => {
     /* set data */
+
     const findObj = memes.find((obj) => addData.addTemplate === obj.name);
     if (typeof findObj !== 'object') {
       return;
@@ -91,12 +48,14 @@ export default function App() {
       setTestObj({
         id: findObj.id,
         name: findObj.name,
-        firstText: addData.addTopText
-          ? addData.addTopText
-          : findObj.example.text[0],
-        secondText: addData.addBottomText
-          ? addData.addBottomText
-          : findObj.example.text[1],
+        firstText:
+          addData.addTopText || addData.addBottomText
+            ? addData.addTopText
+            : findObj.example.text[0],
+        secondText:
+          addData.addBottomText || addData.addTopText
+            ? addData.addBottomText
+            : findObj.example.text[1],
       });
     }
 
@@ -107,12 +66,57 @@ export default function App() {
 
   useEffect(() => {
     /* set image */
+    const changeRegex = {
+      _: ' ',
+      __: '_',
+      '--': '-',
+      '~n': '\n',
+      '~q': '?',
+      '~a': '&',
+      '~p': '%',
+      '~h': '#',
+      '~s': '/',
+      '~b': '\\',
+      '~l': '<',
+      '~g': '>',
+      "''": '"',
+    };
+    const regexTest = (word) => {
+      let makeWord = '';
+      const testWord = word.split('');
+
+      if (testWord.length > 0) {
+        for (let i = 0; i < testWord.length; i++) {
+          const search = Object.keys(changeRegex).find(
+            (key) => changeRegex[key] === testWord[i],
+          );
+          if (typeof search !== 'undefined') {
+            makeWord += search;
+          } else {
+            makeWord += word[i];
+          }
+        }
+      } else {
+        makeWord = '_';
+      }
+
+      return makeWord;
+    };
+    const createImage = (obj) => {
+      if (typeof testObj === 'object') {
+        const { id, firstText, secondText } = obj;
+        const first = regexTest(firstText);
+        const second = regexTest(secondText);
+
+        return `https://api.memegen.link/images/${id}/${first}/${second}.jpg`;
+      }
+    };
     setImage(createImage(testObj));
   }, [testObj]);
 
   return (
     <div id="memes-body" className={styles.app}>
-      <MemeImage className={styles.image} src={image} />
+      <MemeImage src={image} />
 
       <SearchForm
         className={styles.textBox}
