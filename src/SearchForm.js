@@ -6,11 +6,6 @@ export default function SearchForm(props) {
   return (
     <div className={props.className}>
       <form id="search">
-        <Selector
-          labelText="Meme template"
-          option={props.selectValue}
-          onChange={props.changeTemplate}
-        />
         <Input
           name="top-text"
           labelText="Top Text"
@@ -22,6 +17,11 @@ export default function SearchForm(props) {
           labelText="Bottom Text"
           value={props.bottomText}
           onChange={props.setBottom}
+        />
+        <Selector
+          labelText="Meme template"
+          option={props.selectValue}
+          onChange={props.changeTemplate}
         />
         <Button
           type="button"
