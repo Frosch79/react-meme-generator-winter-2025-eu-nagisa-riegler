@@ -8,13 +8,13 @@ export default function SearchForm(props) {
       <form id="search">
         <Input
           name="top-text"
-          labelText="Top Text"
+          labelText="Top text"
           value={props.topText}
           onChange={props.setTop}
         />
         <Input
           name="bottom-text"
-          labelText="Bottom Text"
+          labelText="Bottom text"
           value={props.bottomText}
           onChange={props.setBottom}
         />
