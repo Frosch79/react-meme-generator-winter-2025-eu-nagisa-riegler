@@ -13,13 +13,13 @@ export default function SearchForm(props) {
         />
         <Input
           name="top-text"
-          labelText="Top Text: "
+          labelText="Top Text"
           value={props.topText}
           onChange={props.setTop}
         />
         <Input
           name="bottom-text"
-          labelText="Bottom Text: "
+          labelText="Bottom Text"
           value={props.bottomText}
           onChange={props.setBottom}
         />
