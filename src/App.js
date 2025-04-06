@@ -11,12 +11,11 @@ export default function App() {
   const [topText, setTopText] = useState('');
   const [bottomText, setBottomText] = useState('');
   const [image, setImage] = useState();
-  /*   const [addData, setAddData] = useState({}); */
-  /*   const [testObj, setTestObj] = useState(); */
 
   const apiUrl = 'https://api.memegen.link/templates/';
 
   const textConvertor = (word) => {
+    /* Convert text for url */
     const changeRegex = {
       _: ' ',
       __: '_',
@@ -70,44 +69,6 @@ export default function App() {
     fetch(image).catch((error) => console.log(error));
   }, [image]);
 
-  /* useEffect(() => { */
-  /* set data */
-  /*
-    const findObj = memes.find((obj) => addData.addTemplate === obj.name);
-    if (typeof findObj !== 'object') {
-      return;
-    } else {
-      setTestObj({
-        id: findObj.id,
-        name: findObj.name,
-        firstText:
-          addData.addTopText || addData.addBottomText
-            ? addData.addTopText
-            : findObj.example.text[0],
-        secondText:
-          addData.addBottomText || addData.addTopText
-            ? addData.addBottomText
-            : findObj.example.text[1],
-      });
-    }
-
-    setBottomText('');
-    setTopText('');
-    setTemplate('');
-  }, [addData, memes]);
-
-  useEffect(() => {
-    if (typeof testObj === 'object') {
-      const { firstText, secondText } = testObj;
-      const first = textConvertor(firstText);
-      const second = textConvertor(secondText);
-
-      return setImage(
-        `https://api.memegen.link/images/${testObj.id}/${first}/${second}.jpg`,
-      );
-    }
-  }, [testObj]); */
-
   const downloadImage = () => {
     saveAs(image);
   };
@@ -146,13 +107,6 @@ export default function App() {
         }}
         setTop={(event) => setTopText(event.target.value)}
         setBottom={(event) => setBottomText(event.target.value)}
-        /*  addValue={() => {
-          setAddData({
-            addTemplate: template,
-            addTopText: topText,
-            addBottomText: bottomText,
-          });
-        }} */
         setButton="generate"
       />
 
