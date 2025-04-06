@@ -11,6 +11,7 @@ export default function App() {
   const [bottomText, setBottomText] = useState('');
   const [image, setImage] = useState();
   const [addData, setAddData] = useState({});
+  const [testObj, setTestObj] = useState();
 
   const apiUrl = 'https://api.memegen.link/templates/';
 
@@ -75,18 +76,36 @@ export default function App() {
     if (typeof findObj !== 'object') {
       return;
     } else {
-      const { addTopText, addBottomText } = addData;
-
-      const first = textConvertor(addTopText);
-      const second = textConvertor(addBottomText);
-      setImage(
-        `https://api.memegen.link/images/${findObj.id}/${first}/${second}.jpg`,
-      );
-      setBottomText('');
-      setTopText('');
-      setTemplate('');
+      setTestObj({
+        id: findObj.id,
+        name: findObj.name,
+        firstText:
+          addData.addTopText || addData.addBottomText
+            ? addData.addTopText
+            : findObj.example.text[0],
+        secondText:
+          addData.addBottomText || addData.addTopText
+            ? addData.addBottomText
+            : findObj.example.text[1],
+      });
     }
+
+    setBottomText('');
+    setTopText('');
+    setTemplate('');
   }, [addData, memes]);
+
+  useEffect(() => {
+    if (typeof testObj === 'object') {
+      const { firstText, secondText } = testObj;
+      const first = textConvertor(firstText);
+      const second = textConvertor(secondText);
+
+      return setImage(
+        `https://api.memegen.link/images/${testObj.id}/${first}/${second}.jpg`,
+      );
+    }
+  }, [testObj]);
 
   useEffect(() => {
     const tempImage = memes.find((meme) => template === meme.name);
