@@ -70,7 +70,7 @@ export default function App() {
 
   useEffect(() => {
     /* set data */
-    console.log(addData);
+
     const findObj = memes.find((obj) => addData.addTemplate === obj.name);
     if (typeof findObj !== 'object') {
       return;
