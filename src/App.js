@@ -6,12 +6,11 @@ import SearchForm from './SearchForm';
 
 export default function App() {
   const [memes, setMemes] = useState([]);
-  const [template, setTemplate] = useState();
+  const [template, setTemplate] = useState('Ancient Aliens Guy');
   const [topText, setTopText] = useState('');
   const [bottomText, setBottomText] = useState('');
   const [image, setImage] = useState();
   const [addData, setAddData] = useState({});
-  const [testObj, setTestObj] = useState();
 
   const apiUrl = 'https://api.memegen.link/templates/';
 
@@ -58,17 +57,10 @@ export default function App() {
     async function memeTemplate() {
       const data = await fetch(apiUrl)
         .then((response) => response.json())
-        .then((toObjectSep) => toObjectSep.map((meme) => meme))
-        .then((setMeme) => setMemes(setMeme));
-
-      return data;
-      /*    setMemes(data); */
+        .then((toObjectSep) => toObjectSep.map((meme) => meme));
+      return setMemes(data);
     }
     memeTemplate().catch((error) => console.log(error));
-
-    setAddData({
-      addTemplate: 'Ancient Aliens Guy',
-    });
   }, []);
 
   useEffect(() => {
@@ -82,19 +74,6 @@ export default function App() {
     const findObj = memes.find((obj) => addData.addTemplate === obj.name);
     if (typeof findObj !== 'object') {
       return;
-    } else {
-      setTestObj({
-        id: findObj.id,
-        name: findObj.name,
-        firstText:
-          addData.addTopText || addData.addBottomText
-            ? addData.addTopText
-            : findObj.example.text[0],
-        secondText:
-          addData.addBottomText || addData.addTopText
-            ? addData.addBottomText
-            : findObj.example.text[1],
-      });
     }
 
     setBottomText('');
@@ -103,27 +82,23 @@ export default function App() {
   }, [addData, memes]);
 
   useEffect(() => {
-    if (typeof testObj === 'object') {
-      const { id, firstText, secondText } = testObj;
-      const first = textConvertor(firstText);
-      const second = textConvertor(secondText);
+    const tempImage = memes.find((meme) => template === meme.name);
+    if (typeof tempImage !== 'undefined') {
+      if (topText !== '' || bottomText !== '') {
+        console.log(topText, bottomText);
 
-      return setImage(
-        `https://api.memegen.link/images/${id}/${first}/${second}.jpg`,
-      );
-    }
-  }, [testObj]);
-
-  useEffect(() => {
-    if (topText !== '' || bottomText !== '') {
-      const tempImage = memes.find((meme) => template === meme.name);
-      console.log(topText, bottomText);
-      const id = tempImage.id;
-      const first = textConvertor(topText);
-      const second = textConvertor(bottomText);
-      return setImage(
-        `https://api.memegen.link/images/${id}/${first}/${second}.jpg`,
-      );
+        const first = textConvertor(topText);
+        const second = textConvertor(bottomText);
+        return setImage(
+          `https://api.memegen.link/images/${tempImage.id}/${first}/${second}.jpg`,
+        );
+      } else {
+        const first = textConvertor(tempImage.example.text[0]);
+        const second = textConvertor(tempImage.example.text[1]);
+        return setImage(
+          `https://api.memegen.link/images/${tempImage.id}/${first}/${second}.jpg`,
+        );
+      }
     }
   }, [template, topText, bottomText, memes]);
 
