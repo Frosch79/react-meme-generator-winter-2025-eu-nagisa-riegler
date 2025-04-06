@@ -1,3 +1,4 @@
+import { saveAs } from 'file-saver';
 import { useEffect, useState } from 'react';
 import styles from './App.module.scss';
 import DownloadButton from './DownloadButton';
@@ -107,6 +108,9 @@ export default function App() {
     }
   }, [testObj]); */
 
+  const downloadImage = () => {
+    saveAs(image);
+  };
   useEffect(() => {
     const tempImage = memes.find((meme) => template === meme.name);
     if (typeof tempImage !== 'undefined') {
@@ -157,6 +161,7 @@ export default function App() {
         type="button"
         setButton="Download"
         imageFile={image}
+        onClick={downloadImage}
       />
     </div>
   );
