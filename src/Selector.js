@@ -5,6 +5,7 @@ export default function Selector(props) {
     <div className={props.className}>
       <label htmlFor="template-selector">{props.labelText}</label>
       <select
+        selected
         defaultValue={(event) => event.target.option.value}
         id="template-selector"
         onChange={props.onChange}

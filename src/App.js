@@ -15,6 +15,44 @@ export default function App() {
 
   const apiUrl = 'https://api.memegen.link/templates/';
 
+  const textConvertor = (word) => {
+    const changeRegex = {
+      _: ' ',
+      __: '_',
+      '--': '-',
+      '~n': '\n',
+      '~q': '?',
+      '~a': '&',
+      '~p': '%',
+      '~h': '#',
+      '~s': '/',
+      '~b': '\\',
+      '~l': '<',
+      '~g': '>',
+      "''": '"',
+    };
+
+    let makeWord = '';
+    const testWord = word.split('');
+
+    if (testWord.length > 0) {
+      for (let i = 0; i < testWord.length; i++) {
+        const search = Object.keys(changeRegex).find(
+          (key) => changeRegex[key] === testWord[i],
+        );
+        if (typeof search !== 'undefined') {
+          makeWord += search;
+        } else {
+          makeWord += word[i];
+        }
+      }
+    } else {
+      makeWord = '_';
+    }
+
+    return makeWord;
+  };
+
   useEffect(() => {
     /* set template data */
     async function memeTemplate() {
@@ -65,54 +103,29 @@ export default function App() {
   }, [addData, memes]);
 
   useEffect(() => {
-    /* set image */
-    const changeRegex = {
-      _: ' ',
-      __: '_',
-      '--': '-',
-      '~n': '\n',
-      '~q': '?',
-      '~a': '&',
-      '~p': '%',
-      '~h': '#',
-      '~s': '/',
-      '~b': '\\',
-      '~l': '<',
-      '~g': '>',
-      "''": '"',
-    };
-    const regexTest = (word) => {
-      let makeWord = '';
-      const testWord = word.split('');
+    if (typeof testObj === 'object') {
+      const { id, firstText, secondText } = testObj;
+      const first = textConvertor(firstText);
+      const second = textConvertor(secondText);
 
-      if (testWord.length > 0) {
-        for (let i = 0; i < testWord.length; i++) {
-          const search = Object.keys(changeRegex).find(
-            (key) => changeRegex[key] === testWord[i],
-          );
-          if (typeof search !== 'undefined') {
-            makeWord += search;
-          } else {
-            makeWord += word[i];
-          }
-        }
-      } else {
-        makeWord = '_';
-      }
-
-      return makeWord;
-    };
-    const createImage = (obj) => {
-      if (typeof testObj === 'object') {
-        const { id, firstText, secondText } = obj;
-        const first = regexTest(firstText);
-        const second = regexTest(secondText);
-
-        return `https://api.memegen.link/images/${id}/${first}/${second}.jpg`;
-      }
-    };
-    setImage(createImage(testObj));
+      return setImage(
+        `https://api.memegen.link/images/${id}/${first}/${second}.jpg`,
+      );
+    }
   }, [testObj]);
+
+  useEffect(() => {
+    if (topText !== '' || bottomText !== '') {
+      const tempImage = memes.find((meme) => template === meme.name);
+      console.log(topText, bottomText);
+      const id = tempImage.id;
+      const first = textConvertor(topText);
+      const second = textConvertor(bottomText);
+      return setImage(
+        `https://api.memegen.link/images/${id}/${first}/${second}.jpg`,
+      );
+    }
+  }, [template, topText, bottomText, memes]);
 
   return (
     <div id="memes-body" className={styles.app}>
