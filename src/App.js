@@ -10,8 +10,8 @@ export default function App() {
   const [topText, setTopText] = useState('');
   const [bottomText, setBottomText] = useState('');
   const [image, setImage] = useState();
-  const [addData, setAddData] = useState({});
-  const [testObj, setTestObj] = useState();
+  /*   const [addData, setAddData] = useState({}); */
+  /*   const [testObj, setTestObj] = useState(); */
 
   const apiUrl = 'https://api.memegen.link/templates/';
 
@@ -69,9 +69,9 @@ export default function App() {
     fetch(image).catch((error) => console.log(error));
   }, [image]);
 
-  useEffect(() => {
-    /* set data */
-
+  /* useEffect(() => { */
+  /* set data */
+  /*
     const findObj = memes.find((obj) => addData.addTemplate === obj.name);
     if (typeof findObj !== 'object') {
       return;
@@ -105,7 +105,7 @@ export default function App() {
         `https://api.memegen.link/images/${testObj.id}/${first}/${second}.jpg`,
       );
     }
-  }, [testObj]);
+  }, [testObj]); */
 
   useEffect(() => {
     const tempImage = memes.find((meme) => template === meme.name);
@@ -142,20 +142,20 @@ export default function App() {
         }}
         setTop={(event) => setTopText(event.target.value)}
         setBottom={(event) => setBottomText(event.target.value)}
-        addValue={() => {
+        /*  addValue={() => {
           setAddData({
             addTemplate: template,
             addTopText: topText,
             addBottomText: bottomText,
           });
-        }}
+        }} */
         setButton="generate"
       />
 
       <DownloadButton
         className={styles.download}
         type="button"
-        setButton="download"
+        setButton="Download"
         imageFile={image}
       />
     </div>

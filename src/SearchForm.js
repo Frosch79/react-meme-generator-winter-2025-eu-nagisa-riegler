@@ -1,4 +1,4 @@
-import Button from './Button';
+/* import Button from './Button'; */
 import Input from './Input';
 import Selector from './Selector';
 
@@ -23,11 +23,11 @@ export default function SearchForm(props) {
           option={props.selectValue}
           onChange={props.changeTemplate}
         />
-        <Button
+        {/*  <Button
           type="button"
           setButton={props.setButton}
           onClick={props.addValue}
-        />
+        /> */}
       </form>
     </div>
   );
