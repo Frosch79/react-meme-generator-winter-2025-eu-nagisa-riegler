@@ -70,15 +70,22 @@ export default function App() {
 
   useEffect(() => {
     /* set data */
-
+    console.log(addData);
     const findObj = memes.find((obj) => addData.addTemplate === obj.name);
     if (typeof findObj !== 'object') {
       return;
-    }
+    } else {
+      const { addTopText, addBottomText } = addData;
 
-    setBottomText('');
-    setTopText('');
-    setTemplate('');
+      const first = textConvertor(addTopText);
+      const second = textConvertor(addBottomText);
+      setImage(
+        `https://api.memegen.link/images/${findObj.id}/${first}/${second}.jpg`,
+      );
+      setBottomText('');
+      setTopText('');
+      setTemplate('');
+    }
   }, [addData, memes]);
 
   useEffect(() => {
