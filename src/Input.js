@@ -7,7 +7,7 @@ export default function Input(props) {
         type="search"
         name={props.name}
         value={props.value}
-        onChange={props.onChange}
+        onChange={props.onChange} 
       />
     </div>
   );

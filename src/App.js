@@ -64,11 +64,6 @@ export default function App() {
     memeTemplate().catch((error) => console.log(error));
   }, []);
 
-  useEffect(() => {
-    /* set image */
-    fetch(image).catch((error) => console.log(error));
-  }, [image]);
-
   const downloadImage = () => {
     saveAs(image);
   };
@@ -76,8 +71,6 @@ export default function App() {
     const tempImage = memes.find((meme) => template === meme.name);
     if (typeof tempImage !== 'undefined') {
       if (topText !== '' || bottomText !== '') {
-        console.log(topText, bottomText);
-
         const first = textConvertor(topText);
         const second = textConvertor(bottomText);
         return setImage(
@@ -92,6 +85,9 @@ export default function App() {
       }
     }
   }, [template, topText, bottomText, memes]);
+
+  /* set image */
+  fetch(image).catch((error) => console.log(error));
 
   return (
     <div id="memes-body" className={styles.app}>
