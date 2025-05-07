@@ -1,5 +1,5 @@
 import { saveAs } from 'file-saver';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import styles from './App.module.scss';
 import DownloadButton from './DownloadButton';
 import MemeImage from './MemeImage';
@@ -10,7 +10,6 @@ export default function App() {
   const [template, setTemplate] = useState('Ancient Aliens Guy');
   const [topText, setTopText] = useState('');
   const [bottomText, setBottomText] = useState('');
-  const [image, setImage] = useState();
 
   const apiUrl = 'https://api.memegen.link/templates/';
 
@@ -32,25 +31,25 @@ export default function App() {
       "''": '"',
     };
 
-    let makeWord = '';
-    const testWord = word.split('');
+    let createWord = '';
+    const splitWord = word.split('');
 
-    if (testWord.length > 0) {
-      for (let i = 0; i < testWord.length; i++) {
+    if (splitWord.length > 0) {
+      for (let i = 0; i < splitWord.length; i++) {
         const search = Object.keys(changeRegex).find(
-          (key) => changeRegex[key] === testWord[i],
+          (key) => changeRegex[key] === splitWord[i],
         );
         if (typeof search !== 'undefined') {
-          makeWord += search;
+          createWord += search;
         } else {
-          makeWord += word[i];
+          createWord += word[i];
         }
       }
     } else {
-      makeWord = '_';
+      createWord = '_';
     }
 
-    return makeWord;
+    return createWord;
   };
 
   useEffect(() => {
@@ -58,35 +57,36 @@ export default function App() {
     async function memeTemplate() {
       const data = await fetch(apiUrl)
         .then((response) => response.json())
-        .then((toObjectSep) => toObjectSep.map((meme) => meme));
+        .then((obj) => obj.map((meme) => meme));
       return setMemes(data);
     }
     memeTemplate().catch((error) => console.log(error));
   }, []);
 
+  const image = useMemo(() => {
+    /* to store image url  */
+    const foundMeme = memes.find((meme) => template === meme.name);
+    if (typeof foundMeme !== 'undefined') {
+      let first, second;
+      if (topText !== '' || bottomText !== '') {
+        first = textConvertor(topText);
+        second = textConvertor(bottomText);
+      } else {
+        first = textConvertor(foundMeme.example.text[0]);
+        second = textConvertor(foundMeme.example.text[1]);
+      }
+
+      return `https://api.memegen.link/images/${foundMeme.id}/${first}/${second}.jpg`;
+    }
+  }, [template, bottomText, topText, memes]);
+
+  /* DL image */
   const downloadImage = () => {
     saveAs(image);
   };
-  useEffect(() => {
-    const tempImage = memes.find((meme) => template === meme.name);
-    if (typeof tempImage !== 'undefined') {
-      if (topText !== '' || bottomText !== '') {
-        const first = textConvertor(topText);
-        const second = textConvertor(bottomText);
-        return setImage(
-          `https://api.memegen.link/images/${tempImage.id}/${first}/${second}.jpg`,
-        );
-      } else {
-        const first = textConvertor(tempImage.example.text[0]);
-        const second = textConvertor(tempImage.example.text[1]);
-        return setImage(
-          `https://api.memegen.link/images/${tempImage.id}/${first}/${second}.jpg`,
-        );
-      }
-    }
-  }, [template, topText, bottomText, memes]);
 
-  /* set image */
+  /* fetch image */
+
   fetch(image).catch((error) => console.log(error));
 
   return (
@@ -98,9 +98,7 @@ export default function App() {
         topText={topText}
         bottomText={bottomText}
         selectValue={memes}
-        changeTemplate={(event) => {
-          setTemplate(event.target.value);
-        }}
+        changeTemplate={(event) => setTemplate(event.target.value)}
         setTop={(event) => setTopText(event.target.value)}
         setBottom={(event) => setBottomText(event.target.value)}
         setButton="generate"
@@ -110,7 +108,6 @@ export default function App() {
         className={styles.download}
         type="button"
         setButton="Download"
-        imageFile={image}
         onClick={downloadImage}
       />
     </div>
