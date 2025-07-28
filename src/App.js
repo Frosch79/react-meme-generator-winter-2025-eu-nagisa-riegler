@@ -85,10 +85,6 @@ export default function App() {
     saveAs(image);
   };
 
-  /* fetch image */
-
-  fetch(image).catch((error) => console.log(error));
-
   return (
     <div id="memes-body" className={styles.app}>
       <MemeImage src={image} />
