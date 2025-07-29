@@ -49,7 +49,8 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
-      "@parcel/watcher"
+      "@parcel/watcher",
+      "unrs-resolver"
     ],
     "ignoredBuiltDependencies": [
       "core-js",
